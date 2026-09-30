@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="叶えたい">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>叶えたいこと</title>
+<style>
+:root{box-sizing:border-box;--bg:#FFFDF2;--card:#fff;--tx:#2B2340;--mu:#8A8399;--bd:#FFEDA8;--ac:#7B61FF;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="dark"]{--bg:#1E1A2E;--card:#2A2540;--tx:#F5F0FF;--mu:#A69FBD;--bd:#3A3456}
+html{background:var(--bg);-webkit-tap-highlight-color:transparent;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0 auto;max-width:480px;padding:20px 16px 48px;background:var(--bg);color:var(--tx);font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+button{font:inherit;cursor:pointer}
+h1{margin:4px 0 12px;font-size:22px;font-weight:800;letter-spacing:.02em}
+.card{background:var(--card);border-radius:20px;padding:14px 16px;box-shadow:0 3px 0 var(--bd);margin:0 0 16px}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 12px}
+#cnt{font-size:26px;font-weight:800;letter-spacing:-1px}
+#msg{font-size:12px;font-weight:700;color:var(--mu);text-align:right}
+.track{height:10px;border-radius:5px;background:var(--bd);overflow:hidden}
+#bar{height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,#FF5A5F,#FFB400,#00C2A8,#7B61FF);background-size:100vw 100%;transition:width .8s cubic-bezier(.3,1.2,.5,1)}
+.add{display:flex;gap:8px;margin:0 0 20px}
+#in{flex:1;min-width:0;height:44px;border:2px solid var(--bd);border-radius:14px;padding:0 12px;font-size:16px;background:var(--card);color:var(--tx);outline:none}
+#in:focus{border-color:var(--ac)}
+#addb{height:44px;padding:0 18px;border:none;border-radius:14px;background:var(--ac);color:#fff;font-weight:800;font-size:14px;box-shadow:0 3px 0 #4E3AC4}
+#addb:active{transform:translateY(2px);box-shadow:0 1px 0 #4E3AC4}
+ul{list-style:none;margin:0;padding:0}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--c);border-radius:16px;padding:9px 10px 9px 12px;margin:0 0 8px;transition:opacity .4s ease,transform .3s ease}
+.row.new{animation:in .4s ease both}
+.row.out{opacity:0;transform:translateX(28px)}
+.row.done{opacity:.6}
+.t{flex:1;font-size:14px;font-weight:700;line-height:1.4;word-break:break-word;transition:color .4s}
+.done .t{color:var(--mu);text-decoration:line-through;text-decoration-color:var(--c);text-decoration-thickness:2px}
+.chk{position:relative;flex:none;width:26px;height:26px;padding:0;display:grid;place-items:center;border-radius:50%;border:2.5px solid var(--c);background:transparent}
+.chk svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24}
+.done .chk{background:var(--c)}
+.done .chk svg{stroke-dashoffset:0}
+.chk.pop{animation:pop .8s cubic-bezier(.34,1.4,.64,1)}
+.chk.pop svg{animation:draw .5s ease .15s both}
+.chk.pop::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--c);animation:ring .9s ease-out forwards}
+.del{border:none;background:none;color:var(--mu);font-size:20px;line-height:1;padding:4px 6px}
+#empty{text-align:center;color:var(--mu);font-weight:700;font-size:12px;padding:20px 0}
+.bk{display:flex;gap:8px;margin:20px 0 8px}
+.bk button{flex:1;height:38px;border:1.5px solid var(--bd);border-radius:12px;background:var(--card);color:var(--mu);font-size:12px;font-weight:700}
+#st{text-align:center;font-size:12px;color:var(--mu);min-height:18px}
+@keyframes pop{0%{transform:scale(.7);background:transparent}35%{background:var(--c)}55%{transform:scale(1.2)}100%{transform:scale(1);background:var(--c)}}
+@keyframes draw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+@keyframes ring{from{transform:scale(1);opacity:.7}to{transform:scale(2.3);opacity:0}}
+@keyframes in{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1>叶えたいこと</h1>
+<div class="card">
+  <div class="top"><div id="cnt">0 / 0</div><div id="msg"></div></div>
+  <div class="track"><div id="bar"></div></div>
+</div>
+<div class="add">
+  <input id="in" type="text" placeholder="例：北海道に行く" maxlength="80" enterkeyhint="done" aria-label="叶えたいこと">
+  <button id="addb">追加</button>
+</div>
+<ul id="list"></ul>
+<div id="empty">まだ何もありません。上の欄から追加しましょう。</div>
+<div class="bk"><button id="expb">バックアップを書き出す</button><button id="impb">読み込む</button><input id="impf" type="file" accept=".json,application/json" hidden></div>
+<div id="st" role="status"></div>
+<script>
+(function(){
+try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");
+x.fillStyle="#7B61FF";x.fillRect(0,0,180,180);
+x.fillStyle="#FFB400";x.beginPath();x.arc(142,38,24,0,7);x.fill();
+x.fillStyle="#FF5A5F";x.beginPath();x.arc(36,146,14,0,7);x.fill();
+x.strokeStyle="#fff";x.lineWidth=18;x.lineCap="round";x.lineJoin="round";
+x.beginPath();x.moveTo(46,96);x.lineTo(80,130);x.lineTo(136,60);x.stroke();
+var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}
+})();
+var KEY="wishes-v1",COLORS=["#FF5A5F","#FFB400","#00C2A8","#7B61FF","#FF6FB5","#2E9BFF"];
+var items=[],popId=null,newId=null,tm=null;
+try{items=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){items=[]}
+if(!Array.isArray(items))items=[];
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+function $(id){return document.getElementById(id)}
+function render(){
+  var ul=$("list");ul.textContent="";
+  items.forEach(function(it){
+    var li=document.createElement("li");
+    li.className="row"+(it.done?" done":"")+(it.id===newId?" new":"");
+    li.style.setProperty("--c",COLORS[it.c%COLORS.length]);
+    var b=document.createElement("button");
+    b.className="chk"+(it.id===popId?" pop":"");
+    b.setAttribute("aria-label",it.done?"未達成に戻す":"達成にする");
+    b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+    b.onclick=function(){toggle(it.id)};
+    var s=document.createElement("span");s.className="t";s.textContent=it.name;
+    var d=document.createElement("button");d.className="del";d.textContent="×";
+    d.setAttribute("aria-label","削除");
+    d.onclick=function(){del(it.id,li)};
+    li.appendChild(b);li.appendChild(s);li.appendChild(d);ul.appendChild(li);
+  });
+  var n=items.length,k=items.filter(function(i){return i.done}).length;
+  $("cnt").textContent=k+" / "+n;
+  $("bar").style.width=(n?k/n*100:0)+"%";
+  $("msg").textContent=!n?"まずは1つ書いてみよう":k===n?"ぜんぶ叶えた！すごい！":k/n>=.5?"あと少し！いい調子":k?"いい感じ、その調子！":"さあ、はじめよう！";
+  $("empty").style.display=n?"none":"block";
+}
+function toggle(id){
+  var it=items.find(function(i){return i.id===id});if(!it)return;
+  it.done=!it.done;popId=it.done?id:null;save();render();popId=null;
+  clearTimeout(tm);
+  tm=setTimeout(function(){items.sort(function(a,b){return (a.done?1:0)-(b.done?1:0)});save();render()},1000);
+}
+function del(id,li){
+  li.classList.add("out");
+  setTimeout(function(){items=items.filter(function(i){return i.id!==id});save();render()},280);
+}
+function add(){
+  var v=$("in").value.trim();
+  if(!v){$("in").focus();return}
+  var id=Date.now();
+  items.unshift({id:id,name:v,done:false,c:Math.floor(Math.random()*COLORS.length)});
+  $("in").value="";newId=id;save();render();newId=null;
+}
+$("addb").onclick=add;
+$("in").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.isComposing)add()});
+function msg(t){var e=$("st");e.textContent=t;clearTimeout(msg.t);msg.t=setTimeout(function(){e.textContent=""},4000)}
+async function exportData(){
+  var json=JSON.stringify({app:"wishes",v:1,items:items},null,2);
+  var name="wishes-"+new Date().toISOString().slice(0,10)+".json";
+  try{
+    var f=new File([json],name,{type:"application/json"});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});msg("書き出しました");return}
+  }catch(e){if(e&&e.name==="AbortError")return}
+  try{
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));
+    a.download=name;document.body.appendChild(a);a.click();a.remove();msg("書き出しました");
+  }catch(e){msg("書き出せませんでした")}
+}
+$("expb").onclick=exportData;
+$("impb").onclick=function(){$("impf").click()};
+$("impf").onchange=function(){
+  var f=this.files[0],inp=this;if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var d=JSON.parse(r.result),arr=Array.isArray(d)?d:d.items;
+      if(!Array.isArray(arr))throw 0;
+      var have={},n=0;items.forEach(function(i){have[i.id]=1});
+      arr.forEach(function(i){
+        if(i&&typeof i.name==="string"&&!have[i.id]){items.push({id:i.id||Date.now()+n,name:i.name.slice(0,80),done:!!i.done,c:Math.abs(i.c|0)});n++}
+      });
+      save();render();msg(n+"件を読み込みました");
+    }catch(e){msg("読み込めませんでした。ファイルを確認してください")}
+    inp.value="";
+  };
+  r.readAsText(f);
+};
+render();
+</script>
+</body>
+</html>
