@@ -63,13 +63,10 @@ ul{list-style:none;margin:0;padding:0}
 <div id="st" role="status"></div>
 <script>
 (function(){
-try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");
-x.fillStyle="#1d5b97";x.fillRect(0,0,180,180);
-x.fillStyle="#a7c6ed";x.beginPath();x.arc(142,38,24,0,7);x.fill();
-x.fillStyle="#6fa4d9";x.beginPath();x.arc(36,146,14,0,7);x.fill();
-x.strokeStyle="#fff";x.lineWidth=18;x.lineCap="round";x.lineJoin="round";
-x.beginPath();x.moveTo(46,96);x.lineTo(80,130);x.lineTo(136,60);x.stroke();
-var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}
+var svg='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fa4d9"/><stop offset="1" stop-color="#dcebfa"/></linearGradient></defs><rect width="180" height="180" fill="url(#s)"/><circle cx="146" cy="30" r="11" fill="#fff" opacity=".85"/><path d="M0,78 Q11,64 22,70 Q33,76 40,66 Q50,52 62,62 Q72,70 80,64 Q90,56 100,64 Q110,72 118,62 Q128,50 140,60 Q150,68 158,60 Q168,52 180,58 L180,150 L0,150 Z" fill="#86b97a"/><path transform="translate(0,8)" d="M0,78 Q11,64 22,70 Q33,76 40,66 Q50,52 62,62 Q72,70 80,64 Q90,56 100,64 Q110,72 118,62 Q128,50 140,60 Q150,68 158,60 Q168,52 180,58 L180,150 L0,150 Z" fill="#f4f8fc"/><path d="M22,80 V140 M62,72 V140 M100,74 V140 M140,70 V140" stroke="#b9cce2" stroke-width="1.5" opacity=".6"/><rect y="128" width="180" height="52" fill="#2b6fb0"/><path d="M0,128 Q10,123 20,128 T40,128 T60,128 T80,128 T100,128 T120,128 T140,128 T160,128 T180,128" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M10,146 H50 M80,156 H130 M30,166 H70 M110,168 H160" stroke="#6fa4d9" stroke-width="2" stroke-linecap="round"/><path d="M60,88 L84,112 L124,64" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><path d="M60,88 L84,112 L124,64" fill="none" stroke="#1d5b97" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+try{var img=new Image();
+img.onload=function(){try{var c=document.createElement("canvas");c.width=c.height=180;c.getContext("2d").drawImage(img,0,0,180,180);var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}};
+img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)}catch(e){}
 })();
 var KEY="wishes-v1",COLORS=["#6fa4d9","#4a86c9","#2b6fb0","#1d5b97","#164d7a","#0f3a5e"];
 var items=[],popId=null,newId=null,tm=null;
